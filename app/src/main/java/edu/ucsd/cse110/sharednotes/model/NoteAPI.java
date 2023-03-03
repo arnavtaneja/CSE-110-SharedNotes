@@ -4,8 +4,10 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class NoteAPI {
     // TODO: Implement the API using OkHttp!
@@ -45,6 +47,57 @@ public class NoteAPI {
             assert response.body() != null;
             var body = response.body().string();
             Log.i("ECHO", body);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public String getExistingNote(String title) {
+        // URLs cannot contain spaces, so we replace them with %20.
+        title = title.replace(" ", "%20");
+
+        var request = new Request.Builder()
+                .url("https://sharednotes.goto.ucsd.edu/notes/" + title)
+                .method("GET", null)
+                .build();
+
+        try (var response = client.newCall(request).execute()) {
+            assert response.body() != null;
+            var body = response.body().string();
+            Log.i("GET", body);
+            return(body);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return("Note does not exist");
+    }
+
+
+    public void putNote(String title, String message) {
+        // URLs cannot contain spaces, so we replace them with %20.
+        title = title.replace(" ", "%20");
+
+        final MediaType JSON
+                = MediaType.get("application/json; charset=utf-8");
+
+
+        RequestBody requestBody = RequestBody.create(message, JSON);
+
+        Log.i("PUT", String.valueOf(requestBody));
+
+
+        var request = new Request.Builder()
+                .url("https://sharednotes.goto.ucsd.edu/notes/" + title)
+                .method("PUT", requestBody)
+                .build();
+
+        try (var response = client.newCall(request).execute()) {
+            assert response.body() != null;
+            var body = response.body().string();
+            Log.i("PUT", body);
         } catch (Exception e) {
             e.printStackTrace();
         }

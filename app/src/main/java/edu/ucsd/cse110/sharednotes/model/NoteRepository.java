@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.sharednotes.model;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
@@ -79,9 +81,20 @@ public class NoteRepository {
     // ==============
 
     public LiveData<Note> getRemote(String title) {
+
+        NoteAPI noteApi = new NoteAPI();
+
+        String existingNoteInformation = noteApi.getExistingNote(title);
+
+        Log.i("GET", "RESPONSE ACQUIRED");
+        Log.i("BODY", existingNoteInformation);
+
         // TODO: Implement getRemote!
         // TODO: Set up polling background thread (MutableLiveData?)
         // TODO: Refer to TimerService from https://github.com/DylanLukes/CSE-110-WI23-Demo5-V2.
+
+
+
 
         // Start by fetching the note from the server _once_ and feeding it into MutableLiveData.
         // Then, set up a background thread that will poll the server every 3 seconds.
